@@ -90,8 +90,28 @@ def _tensor_conv1d(
     s1 = input_strides
     s2 = weight_strides
 
-    # TODO: Implement for Task 4.1.
-    raise NotImplementedError("Need to implement for Task 4.1")
+    for b in range(batch):
+        for oc in range(out_channels):
+            for w_out in range(out_width):
+                val = 0.0
+                for ic in range(in_channels):
+                    for k_i in range(kw):
+                        if reverse:
+                            w_in = w_out - k_i
+                        else:
+                            w_in = w_out + k_i
+                        # Check bounds to handle padding
+                        if 0 <= w_in < width:
+                            input_idx = b * s1[0] + ic * s1[1] + w_in * s1[2]
+                            weight_idx = oc * s2[0] + ic * s2[1] + k_i * s2[2]
+                            val += input[input_idx] * weight[weight_idx]
+                out[b*out_strides[0] + oc*out_strides[1] + w_out*out_strides[2]] = val
+
+
+
+
+
+
 
 
 tensor_conv1d = njit(_tensor_conv1d, parallel=True)
@@ -219,8 +239,55 @@ def _tensor_conv2d(
     s10, s11, s12, s13 = s1[0], s1[1], s1[2], s1[3]
     s20, s21, s22, s23 = s2[0], s2[1], s2[2], s2[3]
 
-    # TODO: Implement for Task 4.2.
-    raise NotImplementedError("Need to implement for Task 4.2")
+    # Process each output position in parallel.
+    for out_pos in prange(out_size):
+        # Convert the flat output index to a multidimensional index (batch, channel, height, width).
+        out_index: Index = np.empty(MAX_DIMS, np.int32)
+        to_index(out_pos, out_shape, out_index)
+
+        # Extract the indices for the output position.
+        out_batch = out_index[0]
+        out_channel = out_index[1]
+        out_h = out_index[2]
+        out_w = out_index[3]
+
+        # Compute the linear index for this output position.
+        out_linear_idx = index_to_position(out_index, out_strides)
+
+        # Initialize the accumulator for the convolution sum.
+        value_sum = 0.0
+
+        # Iterate over every input channel and each kernel element.
+        for ic in prange(in_channels):
+            for kh_idx in prange(kh):
+                for kw_idx in prange(kw):
+
+                    # Determine how to map kernel indices to input coordinates based on `reverse`.
+                    if reverse:
+                        # When reversed, flip the kernel offsets.
+                        k_h_offset = (kh - 1 - kh_idx)
+                        k_w_offset = (kw - 1 - kw_idx)
+                        in_h = out_h - k_h_offset
+                        in_w = out_w - k_w_offset
+                    else:
+                        # Normal (non-reversed) orientation.
+                        k_h_offset = kh_idx
+                        k_w_offset = kw_idx
+                        in_h = out_h + k_h_offset
+                        in_w = out_w + k_w_offset
+
+                    # Check input bounds. If out of range, treat as zero (skip).
+                    if 0 <= in_h < height and 0 <= in_w < width:
+                        # Compute the linear positions for input and weight.
+                        input_pos = (out_batch * s10) + (ic * s11) + (in_h * s12) + (in_w * s13)
+                        weight_pos = (out_channel * s20) + (ic * s21) + (k_h_offset * s22) + (k_w_offset * s23)
+
+                        # Accumulate the product of the input value and the corresponding kernel weight.
+                        value_sum += input[input_pos] * weight[weight_pos]
+
+        # After summing contributions from all channels and kernel elements, store the result.
+        out[out_linear_idx] = value_sum
+
 
 
 tensor_conv2d = njit(_tensor_conv2d, parallel=True, fastmath=True)

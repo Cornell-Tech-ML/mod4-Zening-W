@@ -1,3 +1,6 @@
+import os.path
+# Set HOME environment variable for Windows
+os.environ['HOME'] = os.path.expanduser('~')
 import random
 
 import embeddings
@@ -34,8 +37,9 @@ class Conv1d(minitorch.Module):
         self.bias = RParam(1, out_channels, 1)
 
     def forward(self, input):
-        # TODO: Implement for Task 4.5.
-        raise NotImplementedError("Need to implement for Task 4.5")
+       conv_result = minitorch.conv1d(input, self.weights.value)
+       result = conv_result + self.bias.value
+       return result
 
 
 class CNNSentimentKim(minitorch.Module):
@@ -61,15 +65,48 @@ class CNNSentimentKim(minitorch.Module):
     ):
         super().__init__()
         self.feature_map_size = feature_map_size
-        # TODO: Implement for Task 4.5.
-        raise NotImplementedError("Need to implement for Task 4.5")
+        self.dropout = dropout
+
+        # Create parallel convolutional layers for each filter size
+        self.conv1 =  Conv1d(embedding_size, feature_map_size, filter_sizes[0])
+        self.conv2 =  Conv1d(embedding_size, feature_map_size, filter_sizes[1])
+        self.conv3 =  Conv1d(embedding_size, feature_map_size, filter_sizes[2])
+
+        # Linear layer for final classification
+        # Input size is feature_map_size * number of filter sizes since we concatenate
+        self.linear = Linear(feature_map_size, 1)
 
     def forward(self, embeddings):
         """
         embeddings tensor: [batch x sentence length x embedding dim]
         """
-        # TODO: Implement for Task 4.5.
-        raise NotImplementedError("Need to implement for Task 4.5")
+        # Transpose to [batch x embedding dim x sentence length] for Conv1d
+        embeddings = embeddings.permute(0, 2, 1)
+
+        # Apply each conv layer in parallel
+        conv_outputs = []
+
+        conv_outputs.append(minitorch.max(self.conv1.forward(embeddings).relu(), dim=2))
+        conv_outputs.append(minitorch.max(self.conv2.forward(embeddings).relu(), dim=2))
+        conv_outputs.append(minitorch.max(self.conv3.forward(embeddings).relu(), dim=2))
+                    
+        # Concatenate all conv outputs
+        x = conv_outputs[0] + conv_outputs[1] + conv_outputs[2]
+
+        # Flatten
+        batch_size = x.shape[0]
+        x = x.view(batch_size, self.feature_map_size)
+
+        # Linear layer
+        x = self.linear(x)
+
+        # Apply dropout
+        x = minitorch.dropout(x, self.dropout, not self.training)
+
+        # Final sigmoid
+        out = x.sigmoid().view(batch_size)
+
+        return out
 
 
 # Evaluation helper methods
