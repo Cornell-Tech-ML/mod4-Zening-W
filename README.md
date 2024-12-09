@@ -45,4 +45,4 @@ Sentiment Analysis (SST2)
 - [Sentiment Analysis Logs (sentiment.txt)](sentiment.txt)
 
 Digit Classification (MNIST)
-- [Digit Classification Logs (mnist.txt)](mnist.txt)=
+- [Digit Classification Logs (mnist.txt)](mnist.txt)
