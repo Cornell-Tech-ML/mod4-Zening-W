@@ -1,6 +1,6 @@
 !cd $DIR; python3.11 project/run_mnist_multiclass.py
 
-/usr/local/lib/python3.11/dist-packages/numba/parfors/parfor.py:2395: NumbaPerformanceWarning: 
+/usr/local/lib/python3.11/dist-packages/numba/parfors/parfor.py:2395: NumbaPerformanceWarning:
 prange or pndindex loop will not be executed in parallel due to there being more than one entry to or exit from the loop (e.g., an assertion).
 
 File "../../usr/local/lib/python3.11/dist-packages/minitorch/fast_ops.py", line 187:
@@ -11,7 +11,7 @@ File "../../usr/local/lib/python3.11/dist-packages/minitorch/fast_ops.py", line 
             ^
 
   warnings.warn(
-/usr/local/lib/python3.11/dist-packages/numba/parfors/parfor.py:2395: NumbaPerformanceWarning: 
+/usr/local/lib/python3.11/dist-packages/numba/parfors/parfor.py:2395: NumbaPerformanceWarning:
 prange or pndindex loop will not be executed in parallel due to there being more than one entry to or exit from the loop (e.g., an assertion).
 
 File "../../usr/local/lib/python3.11/dist-packages/minitorch/fast_ops.py", line 178:
@@ -22,7 +22,7 @@ File "../../usr/local/lib/python3.11/dist-packages/minitorch/fast_ops.py", line 
             ^
 
   warnings.warn(
-/usr/local/lib/python3.11/dist-packages/numba/parfors/parfor.py:2395: NumbaPerformanceWarning: 
+/usr/local/lib/python3.11/dist-packages/numba/parfors/parfor.py:2395: NumbaPerformanceWarning:
 prange or pndindex loop will not be executed in parallel due to there being more than one entry to or exit from the loop (e.g., an assertion).
 
 File "../../usr/local/lib/python3.11/dist-packages/minitorch/fast_ops.py", line 187:
@@ -33,7 +33,7 @@ File "../../usr/local/lib/python3.11/dist-packages/minitorch/fast_ops.py", line 
             ^
 
   warnings.warn(
-/usr/local/lib/python3.11/dist-packages/numba/parfors/parfor.py:2395: NumbaPerformanceWarning: 
+/usr/local/lib/python3.11/dist-packages/numba/parfors/parfor.py:2395: NumbaPerformanceWarning:
 prange or pndindex loop will not be executed in parallel due to there being more than one entry to or exit from the loop (e.g., an assertion).
 
 File "../../usr/local/lib/python3.11/dist-packages/minitorch/fast_ops.py", line 178:
@@ -44,7 +44,7 @@ File "../../usr/local/lib/python3.11/dist-packages/minitorch/fast_ops.py", line 
             ^
 
   warnings.warn(
-/usr/local/lib/python3.11/dist-packages/numba/parfors/parfor.py:2395: NumbaPerformanceWarning: 
+/usr/local/lib/python3.11/dist-packages/numba/parfors/parfor.py:2395: NumbaPerformanceWarning:
 prange or pndindex loop will not be executed in parallel due to there being more than one entry to or exit from the loop (e.g., an assertion).
 
 File "../../usr/local/lib/python3.11/dist-packages/minitorch/fast_ops.py", line 249:
@@ -55,7 +55,7 @@ File "../../usr/local/lib/python3.11/dist-packages/minitorch/fast_ops.py", line 
             ^
 
   warnings.warn(
-/usr/local/lib/python3.11/dist-packages/numba/parfors/parfor.py:2395: NumbaPerformanceWarning: 
+/usr/local/lib/python3.11/dist-packages/numba/parfors/parfor.py:2395: NumbaPerformanceWarning:
 prange or pndindex loop will not be executed in parallel due to there being more than one entry to or exit from the loop (e.g., an assertion).
 
 File "../../usr/local/lib/python3.11/dist-packages/minitorch/fast_ops.py", line 237:
@@ -1083,3 +1083,5 @@ Epoch 16 loss 0.16680106276286977 valid acc 16/16
 Epoch 16 loss 0.31515785735631463 valid acc 16/16
 Epoch 16 loss 0.1179604430221598 valid acc 15/16
 Epoch 16 loss 0.16393472804634357 valid acc 16/16
+
+STOP AT EPOCH 16

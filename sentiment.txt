@@ -1,6 +1,6 @@
 (.venv) PS C:\Users\NING0\mle\mod4-Zening-W> python project/run_sentiment.py
 missing pre-trained embedding for 55 unknown words
-C:\Users\NING0\mle\mod4-Zening-W\.venv\Lib\site-packages\numba\core\typed_passes.py:336: NumbaPerformanceWarning: 
+C:\Users\NING0\mle\mod4-Zening-W\.venv\Lib\site-packages\numba\core\typed_passes.py:336: NumbaPerformanceWarning:
 The keyword argument 'parallel=True' was specified but no transformation for parallel execution was possible.
 
 To find out why, try turning on parallel diagnostics, see https://numba.readthedocs.io/en/stable/user/parallel.html#diagnostics for help.
@@ -11,7 +11,7 @@ def _tensor_conv1d(
 ^
 
   warnings.warn(errors.NumbaPerformanceWarning(msg,
-C:\Users\NING0\mle\mod4-Zening-W\.venv\Lib\site-packages\numba\parfors\parfor.py:2395: NumbaPerformanceWarning: 
+C:\Users\NING0\mle\mod4-Zening-W\.venv\Lib\site-packages\numba\parfors\parfor.py:2395: NumbaPerformanceWarning:
 prange or pndindex loop will not be executed in parallel due to there being more than one entry to or exit from the loop (e.g., an assertion).
 
 File "minitorch\fast_ops.py", line 187:
@@ -33,7 +33,7 @@ File "minitorch\fast_ops.py", line 178:
             ^
 
   warnings.warn(
-C:\Users\NING0\mle\mod4-Zening-W\.venv\Lib\site-packages\numba\parfors\parfor.py:2395: NumbaPerformanceWarning: 
+C:\Users\NING0\mle\mod4-Zening-W\.venv\Lib\site-packages\numba\parfors\parfor.py:2395: NumbaPerformanceWarning:
 prange or pndindex loop will not be executed in parallel due to there being more than one entry to or exit from the loop (e.g., an assertion).
 
 File "minitorch\fast_ops.py", line 187:
@@ -55,7 +55,7 @@ File "minitorch\fast_ops.py", line 178:
             ^
 
   warnings.warn(
-C:\Users\NING0\mle\mod4-Zening-W\.venv\Lib\site-packages\numba\parfors\parfor.py:2395: NumbaPerformanceWarning: 
+C:\Users\NING0\mle\mod4-Zening-W\.venv\Lib\site-packages\numba\parfors\parfor.py:2395: NumbaPerformanceWarning:
 prange or pndindex loop will not be executed in parallel due to there being more than one entry to or exit from the loop (e.g., an assertion).
 
 File "minitorch\fast_ops.py", line 249:
