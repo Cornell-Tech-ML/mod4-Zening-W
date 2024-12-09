@@ -89,7 +89,7 @@ class CNNSentimentKim(minitorch.Module):
         conv_outputs.append(minitorch.max(self.conv1.forward(embeddings).relu(), dim=2))
         conv_outputs.append(minitorch.max(self.conv2.forward(embeddings).relu(), dim=2))
         conv_outputs.append(minitorch.max(self.conv3.forward(embeddings).relu(), dim=2))
-                    
+
         # Concatenate all conv outputs
         x = conv_outputs[0] + conv_outputs[1] + conv_outputs[2]
 

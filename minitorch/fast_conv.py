@@ -22,6 +22,7 @@ Fn = TypeVar("Fn")
 
 
 def njit(fn: Fn, **kwargs: Any) -> Fn:
+    """Wraps a function with Numba's njit for just-in-time compilation."""
     return _njit(inline="always", **kwargs)(fn)  # type: ignore
 
 
@@ -105,13 +106,9 @@ def _tensor_conv1d(
                             input_idx = b * s1[0] + ic * s1[1] + w_in * s1[2]
                             weight_idx = oc * s2[0] + ic * s2[1] + k_i * s2[2]
                             val += input[input_idx] * weight[weight_idx]
-                out[b*out_strides[0] + oc*out_strides[1] + w_out*out_strides[2]] = val
-
-
-
-
-
-
+                out[
+                    b * out_strides[0] + oc * out_strides[1] + w_out * out_strides[2]
+                ] = val
 
 
 tensor_conv1d = njit(_tensor_conv1d, parallel=True)
@@ -147,6 +144,7 @@ class Conv1dFun(Function):
 
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, Tensor]:
+        """Compute gradients of the input and weights for the 1D convolution operation."""
         input, weight = ctx.saved_values
         batch, in_channels, w = input.shape
         out_channels, in_channels, kw = weight.shape
@@ -261,12 +259,11 @@ def _tensor_conv2d(
         for ic in prange(in_channels):
             for kh_idx in prange(kh):
                 for kw_idx in prange(kw):
-
                     # Determine how to map kernel indices to input coordinates based on `reverse`.
                     if reverse:
                         # When reversed, flip the kernel offsets.
-                        k_h_offset = (kh - 1 - kh_idx)
-                        k_w_offset = (kw - 1 - kw_idx)
+                        k_h_offset = kh - 1 - kh_idx
+                        k_w_offset = kw - 1 - kw_idx
                         in_h = out_h - k_h_offset
                         in_w = out_w - k_w_offset
                     else:
@@ -279,15 +276,21 @@ def _tensor_conv2d(
                     # Check input bounds. If out of range, treat as zero (skip).
                     if 0 <= in_h < height and 0 <= in_w < width:
                         # Compute the linear positions for input and weight.
-                        input_pos = (out_batch * s10) + (ic * s11) + (in_h * s12) + (in_w * s13)
-                        weight_pos = (out_channel * s20) + (ic * s21) + (k_h_offset * s22) + (k_w_offset * s23)
+                        input_pos = (
+                            (out_batch * s10) + (ic * s11) + (in_h * s12) + (in_w * s13)
+                        )
+                        weight_pos = (
+                            (out_channel * s20)
+                            + (ic * s21)
+                            + (k_h_offset * s22)
+                            + (k_w_offset * s23)
+                        )
 
                         # Accumulate the product of the input value and the corresponding kernel weight.
                         value_sum += input[input_pos] * weight[weight_pos]
 
         # After summing contributions from all channels and kernel elements, store the result.
         out[out_linear_idx] = value_sum
-
 
 
 tensor_conv2d = njit(_tensor_conv2d, parallel=True, fastmath=True)
@@ -321,6 +324,7 @@ class Conv2dFun(Function):
 
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, Tensor]:
+        """Compute gradients of the input and weights for the 2D convolution operation."""
         input, weight = ctx.saved_values
         batch, in_channels, h, w = input.shape
         out_channels, in_channels, kh, kw = weight.shape

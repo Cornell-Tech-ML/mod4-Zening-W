@@ -72,10 +72,10 @@ class Network(minitorch.Module):
 
         # First conv layer: 1 input channel, 4 output channels, 3x3 kernel
         self.conv1 = Conv2d(1, 4, 3, 3)
-        
+
         # Second conv layer: 4 input channels, 8 output channels, 3x3 kernel
         self.conv2 = Conv2d(4, 8, 3, 3)
-        
+
         # Linear layers
         self.linear1 = Linear(392, 64)  # 392 = 8 * 7 * 7 (channels * height * width after convs and pooling)
         self.linear2 = Linear(64, C)
@@ -83,23 +83,23 @@ class Network(minitorch.Module):
     def forward(self, x):
         # First conv + ReLU
         self.mid = self.conv1.forward(x).relu()
-        
+
         # Second conv + ReLU
         self.out = self.conv2.forward(self.mid).relu()
-        
+
         # Max pooling with 4x4 kernel
         pooled = minitorch.maxpool2d(self.out, (4, 4))
-        
+
         # Flatten: combine channels, height and width dimensions
         flattened = pooled.view(BATCH, 392)
-        
+
         # First linear layer + ReLU + Dropout
         hidden = self.linear1.forward(flattened).relu()
         hidden = minitorch.dropout(hidden, 0.25, not self.training)
-        
+
         # Second linear layer
         logits = self.linear2.forward(hidden)
-        
+
         # Log softmax
         return minitorch.logsoftmax(logits, dim=1)
 

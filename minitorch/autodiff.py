@@ -88,7 +88,6 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     # END ASSIGNMENT 1.4
 
 
-
 def backpropagate(variable: Variable, deriv: Any) -> None:
     """Runs backpropagation on the computation graph in order to compute derivatives for the leave nodes."""
     sorted_vars = topological_sort(variable)

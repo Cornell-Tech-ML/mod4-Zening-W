@@ -72,7 +72,9 @@ def avgpool2d(input: Tensor, kernel: Tuple[int, int]) -> Tensor:
 
     return averaged
 
+
 fast_max = FastOps.reduce(operators.max, -float("inf"))
+
 
 def argmax(input: Tensor, dim: int) -> Tensor:
     """Returns a boolean mask indicating the positions of the maximum values along the specified dimension of the input tensor."""
@@ -82,6 +84,7 @@ def argmax(input: Tensor, dim: int) -> Tensor:
     # Compare each element in `input` with the corresponding max value.
     # This produces a boolean mask that is True where input == max_values, False elsewhere.
     return input == max_values
+
 
 class Max(Function):
     @staticmethod
@@ -110,9 +113,11 @@ class Max(Function):
 
         return grad_input, 0.0
 
+
 def max(input: Tensor, dim: int) -> Tensor:
     """Apply max reduction on one dimension"""
     return Max.apply(input, tensor(dim))
+
 
 def softmax(input: Tensor, dim: int) -> Tensor:
     """Compute the softmax along a specified dimension of the input tensor."""
@@ -145,6 +150,7 @@ def logsoftmax(input: Tensor, dim: int) -> Tensor:
     # Finally, logsoftmax is input minus the log-sum-exp
     return input - lse
 
+
 def maxpool2d(input: Tensor, kernel: Tuple[int, int]) -> Tensor:
     """Apply 2D max pooling over an input tensor."""
     # Unpack input shape and the kernel size
@@ -161,6 +167,7 @@ def maxpool2d(input: Tensor, kernel: Tuple[int, int]) -> Tensor:
     # Reshape back to (batch, channel, new_height, new_width)
     result = max_pooled.view(batch, channels, new_height, new_width)
     return result
+
 
 def dropout(input: Tensor, p: float = 0.5, ignore: bool = False) -> Tensor:
     """Randomly drops out elements of the input tensor with a specified probability."""
